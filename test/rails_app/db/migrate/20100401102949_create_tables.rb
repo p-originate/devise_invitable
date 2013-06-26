@@ -34,5 +34,11 @@ class CreateTables < ActiveRecord::Migration
       t.string :email,              :null => true, :default => ""
       t.string :encrypted_password, :null => true, :default => ""
     end
+
+    create_table :kings do |t|
+      ## Database authenticatable
+      t.string :email,              :null => true, :default => ""
+      t.string :encrypted_password, :null => true, :default => ""
+    end
   end
 end

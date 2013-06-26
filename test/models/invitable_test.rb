@@ -223,6 +223,28 @@ class InvitableTest < ActiveSupport::TestCase
     assert invited_user.errors[:password].empty?
     User.validate_on_invite = validate_on_invite
   end
+  
+  test 'should fail when application code does not fill required attributes' do
+    validate_on_invite = King.validate_on_invite
+    King.validate_on_invite = true
+    invited_king = King.invite!(:email => "valid@email.com", :username => "a"*50)
+    assert invited_user.errors.present?
+    assert invited_user.errors[:password].empty?
+    King.validate_on_invite = validate_on_invite
+  end
+  
+  test 'should allow application code to fill required attributes' do
+    validate_on_invite = King.validate_on_invite
+    King.validate_on_invite = true
+    invited_king = King.invite!(
+      :email => "valid@email.com",
+      :username => "a"*50,
+      :approval_requested => true
+    )
+    assert invited_user.errors.present?
+    assert invited_user.errors[:password].empty?
+    King.validate_on_invite = validate_on_invite
+  end
 
   test 'should validate other attributes when validate_on_invite is enabled and email is not present' do
     validate_on_invite = User.validate_on_invite

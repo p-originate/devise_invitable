@@ -209,6 +209,9 @@ module Devise
         def generate_invitation_token
           self.invitation_token   = self.class.invitation_token
         end
+        
+        def before_validation_on_invite
+        end
 
       module ClassMethods
         # Return fields to invite
@@ -237,6 +240,8 @@ module Devise
           invitable = find_or_initialize_with_errors(invite_key_array, attributes_hash)
           invitable.assign_attributes(attributes, :as => inviter_role(invited_by))
           invitable.invited_by = invited_by
+          
+          invitable.send(:before_validation_on_invite)
 
           invitable.skip_password = true
           invitable.valid? if self.validate_on_invite
